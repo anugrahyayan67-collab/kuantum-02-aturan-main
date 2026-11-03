@@ -63,7 +63,9 @@ export const Measure: React.FC = () => {
   const extra = Math.floor(Math.max(0, t - cue(7) - 0.3) / 0.45);
   const fresh = (t - tA) / ((tB - tA) / N_TRIALS);
   const lastRes = n > 0 ? RESULTS[n - 1] : true;
-  const flash = n > 0 && t < tB ? Math.max(0, 1 - ((fresh % 1) * 2.2)) * (n < 30 ? 1 : 0.5) : 0;
+  // kilatan detektor tiap pengukuran: naik cepat tapi halus (bukan gigi gergaji), amplitudo & akhir kontinu
+  const fph = ((fresh % 1) + 1) % 1;
+  const flash = n > 0 ? Math.min(1, fph * 10) * Math.max(0, 1 - fph * 2.2) * mix(1, 0.5, Math.min(1, Math.max(0, (n - 20) / 20))) * (1 - ramp(t, tB - 0.4, tB)) : 0;
   const s2 = mix(1, 0, collapse);
   const s1 = mix(1, 1.25, collapse);
   return (
