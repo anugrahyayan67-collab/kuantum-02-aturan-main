@@ -58,6 +58,12 @@ export const Measure: React.FC = () => {
   const counts = [0, 0];
   for (let k = 0; k < n; k++) counts[RESULTS[k] ? 0 : 1]++;
   const total = Math.max(1, counts[0] + counts[1]);
+  // batang histogram bergeser halus dari nilai sebelum ke sesudah tiap percobaan (bukan lompat 1 frame)
+  const prevCounts = [0, 0];
+  for (let k = 0; k < n - 1; k++) prevCounts[RESULTS[k] ? 0 : 1]++;
+  const qStep = prog * N_TRIALS - n;
+  const blend = EASE_IN_OUT(Math.min(1, Math.max(0, qStep * 4)));
+  const barFrac = (i: number) => mix(n > 1 ? prevCounts[i] / (n - 1) : 0, n ? counts[i] / total : 0, blend);
   const collapse = ramp(t, wordOf(6, 'runtuh') - 0.2, wordOf(6, 'runtuh') + 1.0, EASE_IN_OUT);
   const again = ramp(t, cue(7), cue(7) + 0.4);
   const extra = Math.floor(Math.max(0, t - cue(7) - 0.3) / 0.45);
@@ -107,8 +113,7 @@ export const Measure: React.FC = () => {
         <g opacity={det}>
           <line x1={1160} y1={BASE} x2={1780} y2={BASE} stroke={C.muted} strokeWidth={2} />
           {BIN.map((b, i) => {
-            const frac = counts[i] / total;
-            const h = n ? frac * MAXH : 0;
+            const h = barFrac(i) * MAXH;
             return (
               <g key={i}>
                 <rect x={b.x - 80} y={BASE - h} width={160} height={h} rx={10} fill={b.col} opacity={0.85} />
