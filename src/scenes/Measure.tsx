@@ -114,13 +114,13 @@ export const Measure: React.FC = () => {
                 <Label x={b.x} y={BASE + 34} size={26} color={b.col} weight={600}>
                   {b.label}
                 </Label>
-                <Label x={b.x} y={BASE - h - 30} size={28} color={C.ink} font="mono" opacity={n ? 1 : 0}>
+                <Label x={b.x} y={BASE - h - 30} size={28} color={C.ink} font="mono" opacity={ramp(t, tA, tA + 0.4)}>
                   {`${counts[i]}`}
                 </Label>
               </g>
             );
           })}
-          <Label x={1470} y={400} size={26} color={C.muted} opacity={n ? 1 : 0}>
+          <Label x={1470} y={400} size={26} color={C.muted} opacity={ramp(t, tA, tA + 0.4)}>
             {`${n} kali pengukuran`}
           </Label>
         </g>
